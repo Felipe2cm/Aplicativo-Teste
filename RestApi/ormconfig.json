@@ -1,0 +1,17 @@
+{
+  "type": "mysql",
+  "host": "VMDEV01",
+  "port": 3306,
+  "username": "root",
+  "password": "joseaa",
+  "database": "bootcamp_rs",
+  "entities": [
+    "./src/models/*.ts"
+  ],
+  "migrations": [
+    "./src/database/migrations/*.ts"
+  ],
+  "cli": {
+    "migrationsDir": "./src/database/migrations"
+  }
+}
