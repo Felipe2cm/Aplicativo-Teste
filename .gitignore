@@ -1,0 +1,7 @@
+RestApi/node_modules
+RestApi/dist
+
+App/node_modules
+App/.expo
+
+Web/node_modules

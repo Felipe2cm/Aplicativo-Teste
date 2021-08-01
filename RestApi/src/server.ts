@@ -6,6 +6,7 @@ import uploadConfig from './config/upload';
 import AppError from './/errors/AppError';
 
 import './database'
+import CreateUserService from './services/CreateUserService';
 
 const app = express();
 

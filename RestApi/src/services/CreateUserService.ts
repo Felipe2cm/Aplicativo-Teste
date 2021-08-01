@@ -32,7 +32,11 @@ export default class CreateUserService {
       password: hashedPassword,
     });
 
-    await usersRepository.save(user);
+    try {
+      await usersRepository.save(user);
+    } catch (error) {
+      console.log('Erro: >> ', error);
+    }
 
     return user;
   }
