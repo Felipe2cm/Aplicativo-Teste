@@ -1,9 +1,10 @@
 import React, { useCallback, useRef } from 'react';
-import { Image, View, ScrollView, TextInput} from 'react-native';
+import { Image, View, ScrollView, TextInput, Alert} from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 import { FormHandles } from '@unform/core';
+import * as Yup from 'yup';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -19,15 +20,44 @@ import {
 } from './styles';
 
 import logoImg from '../../assets/logo.png';
+import getValidationError from '../../utils/getValidationErros';
+
+interface SignInFormData {
+  email: string;
+  password: string;
+}
 
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const passwordInputRef = useRef<TextInput>(null);
   const navigation = useNavigation();
 
-  const handleSignIn = useCallback((data: object) => {
-    console.log(data)
-  }, []);
+  const handleSignIn = useCallback(async (data: SignInFormData) => {
+    formRef.current?.setErrors({});
+
+    const schema = Yup.object().shape({
+      email: Yup.string().trim().required('Email obrigatório.').email('Digite um email válido.'),
+      password: Yup.string().required('Senha obrigatória.')
+    });
+
+    try {
+
+        await schema.validate(data, {
+            abortEarly: false,
+        });
+
+        // signIn({
+        //     email: data.email,
+        //     password: data.password
+        // });
+    } catch (err) {
+        const error: Yup.ValidationError = JSON.parse(JSON.stringify(err));
+
+        const errors = getValidationError(err);
+
+        formRef.current?.setErrors(errors);
+    }
+}, []);
 
   return (
     <>
@@ -41,7 +71,11 @@ const SignIn: React.FC = () => {
             <Title>Faça seu logon</Title>
           </View>
 
-          <FormSign style={{ width: '100%' }} ref={formRef} onSubmit={handleSignIn}>
+          <FormSign
+          style={{ width: '100%' }}
+          ref={formRef}
+          onSubmit={handleSignIn}
+          >
 
             <Input
               name="email"
@@ -64,6 +98,7 @@ const SignIn: React.FC = () => {
               secureTextEntry
               returnKeyType="send"
               onSubmitEditing={() => formRef.current?.submitForm()}
+              textContentType="password"
             />
 
             <Button onPress={() => {

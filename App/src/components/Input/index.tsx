@@ -1,8 +1,15 @@
-import React, { useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
+import React, {
+  useEffect,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+  useState
+} from 'react';
 import { TextInputProps } from 'react-native';
 import { useField } from '@unform/core';
 
 import { Container, TextInput, Icon } from './styles';
+import { useCallback } from 'react';
 
 interface InputProps extends TextInputProps {
   name: string;
@@ -23,12 +30,14 @@ const Input: React.ForwardRefRenderFunction<InputRef ,InputProps> = ({name, icon
   const { fieldName, registerField, error, defaultValue = '' } = useField(name);
   const inputValueRef = useRef<InputValueReference>({ value: defaultValue });
 
+  const [ isFocused, setIsFocused] = useState(false);
+  const [ isFilled, setIsFilled] = useState(false);
+
   useImperativeHandle(ref, () => ({
     focus() {
       inputElementRef.current.focus();
     }
   }))
-
   useEffect(() => {
     registerField({
       name: fieldName,
@@ -45,10 +54,24 @@ const Input: React.ForwardRefRenderFunction<InputRef ,InputProps> = ({name, icon
     });
   }, [fieldName, registerField]);
 
+  const handleInputFocus = useCallback(() => {
+    setIsFocused(true);
+  }, []);
+
+  const handleInputBlur = useCallback(() => {
+    setIsFocused(false);
+
+    setIsFilled(!!inputValueRef.current.value);
+  }, []);
+
   return (
 
-    <Container>
-      <Icon name={icon} size={20} color="#666360"></Icon>
+    <Container isFocused={isFocused} isFilled={isFilled} isErrored={!!error}>
+      <Icon
+      name={icon}
+      size={20}
+      color={ isFilled || isFocused ? '#ff9000' : '#666360' }
+      />
 
       <TextInput
       ref = {inputElementRef}
@@ -56,6 +79,8 @@ const Input: React.ForwardRefRenderFunction<InputRef ,InputProps> = ({name, icon
       keyboardAppearance="dark"
       defaultValue={defaultValue}
       {...rest}
+      onFocus = { handleInputFocus }
+      onBlur = { handleInputBlur }
       onChangeText={value => {
         inputValueRef.current.value = value;
       }}

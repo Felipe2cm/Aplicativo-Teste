@@ -24,13 +24,13 @@ const SignUp: React.FC = () => {
             password: Yup.string().min(6, 'No mínimo 6 dígitos.')
         });
 
-        try {            
+        try {
             await schema.validate(data, {
                 abortEarly: false,
             })
 
         } catch (err) {
-            const error: Yup.ValidationError = JSON.parse(JSON.stringify(err));            
+            const error: Yup.ValidationError = JSON.parse(JSON.stringify(err));
 
             const errors = getValidationError(err);
 
@@ -42,28 +42,28 @@ const SignUp: React.FC = () => {
     return (
         <Container>
             <Background/>
-    
+
             <Content>
                 <img src={logoImg} alt="GoBarber"/>
-    
+
                 <Form ref={formRef} onSubmit={handleSubmit} >
                     <h1>Faça seu Cadatro</h1>
-    
+
                     <Input autoComplete="off" name="name" icon={FiUser} placeholder="Nome"/>
                     <Input autoComplete="off" name="email" icon={FiMail} placeholder="E-mail"/>
                     <Input name="password" icon={FiLock} type="password" placeholder="Senha" />
-    
-                    <Button type="submit">Entrar</Button>                
+
+                    <Button type="submit">Entrar</Button>
                 </Form>
-    
+
                 <a href="login">
-                  <FiArrowLeft /> 
+                  <FiArrowLeft />
                   Voltar para logon
                 </a>
             </Content>
-    
-    
-        </Container>        
+
+
+        </Container>
     );
 }
 

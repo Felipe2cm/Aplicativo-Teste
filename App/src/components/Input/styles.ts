@@ -1,7 +1,13 @@
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 import { AntDesign } from '@expo/vector-icons';
 
-export const Container = styled.View`
+interface ContainerProps {
+  isFocused: boolean;
+  isFilled: boolean;
+  isErrored: boolean;
+}
+
+export const Container = styled.View<ContainerProps>`
   width: 100%;
   height: 60px;
   padding: 0 16px;
@@ -11,6 +17,14 @@ export const Container = styled.View`
 
   flex-direction: row;
   align-items: center;
+
+  ${ (props) => props.isErrored  && css`
+    border: red solid 2px;
+  `}
+
+  ${ (props) => props.isFocused  && css`
+    border: #ff9000 solid 2px;
+  `}
 `;
 
 

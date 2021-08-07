@@ -7,7 +7,7 @@ import getValidationError from '../../utils/getValidationErros';
 
 import logoImg from '../../assets/logo.svg';
 
-import { AuthContext } from '../../context/AuthContext';
+import { useAuth } from '../../hooks/AuthContext';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 
@@ -21,17 +21,17 @@ interface SignInFormData {
 const SignIn: React.FC = () => {
     const formRef = useRef<FormHandles>(null);
 
-    const { signIn, user } = useContext(AuthContext);    
-        
+    const { signIn } = useAuth();
+
     const handleSubmit = useCallback(async (data: SignInFormData) => {
         formRef.current?.setErrors({});
 
-        const schema = Yup.object().shape({            
+        const schema = Yup.object().shape({
             email: Yup.string().trim().required('Email obrigatório.').email('Digite um email válido.'),
             password: Yup.string().required('Senha obrigatória.')
         });
 
-        try {            
+        try {
             await schema.validate(data, {
                 abortEarly: false,
             })
@@ -41,11 +41,13 @@ const SignIn: React.FC = () => {
                 password: data.password
             });
         } catch (err) {
-            const error: Yup.ValidationError = JSON.parse(JSON.stringify(err));            
-
+          if(err instanceof Yup.ValidationError) {
             const errors = getValidationError(err);
 
             formRef.current?.setErrors(errors);
+          }
+
+
         }
     }, [signIn]);
 
@@ -67,14 +69,14 @@ return (
             </Form>
 
             <a href="login">
-              <FiLogIn/> 
+              <FiLogIn/>
               Criar Conta
             </a>
         </Content>
 
         <Background/>
 
-    </Container>        
+    </Container>
 );
 }
 

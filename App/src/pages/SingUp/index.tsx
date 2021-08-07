@@ -56,9 +56,9 @@ const SignUp: React.FC = () => {
 
             <Input
             name="name"
+            autoCapitalize="words"
             icon="user"
             placeholder="Nome"
-            keyboardType="default"
             returnKeyType="next"
             onSubmitEditing={() => emailInputRef.current?.focus()}
             />
@@ -83,6 +83,7 @@ const SignUp: React.FC = () => {
             secureTextEntry
             returnKeyType="send"
             onSubmitEditing={() => formRef.current?.submitForm()}
+            textContentType="newPassword"
             />
 
             <Button onPress={() => {
