@@ -1,5 +1,6 @@
 import styled from 'styled-components/native';
 import { Platform } from 'react-native';
+import { Form } from '@unform/mobile';
 
 
 export const Container = styled.View`
@@ -49,3 +50,8 @@ export const BackToSignInButtonText = styled.Text`
   font-family: 'RobotoSlab_500Medium';
   margin-left: 16px;
 `;
+
+export const FormSign = styled(Form)`
+  width: 100%;
+`;
+

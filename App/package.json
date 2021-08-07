@@ -1,5 +1,12 @@
 {
   "main": "node_modules/expo/AppEntry.js",
+  "type": "commonjs",
+  "exports": {
+    ".": "./index.js",
+    "./jsx-dev-runtime": "./jsx-dev-runtime.js",
+    "./jsx-runtime": "./jsx-runtime.js",
+    "./": "./"
+  },
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -29,8 +36,8 @@
     "expo-app-loading": "^1.1.2",
     "expo-font": "~9.2.1",
     "expo-status-bar": "~1.0.4",
-    "react": "16.13.1",
-    "react-dom": "16.13.1",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
     "react-native-gesture-handler": "~1.10.2",
     "react-native-reanimated": "~2.2.0",

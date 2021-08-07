@@ -1,8 +1,9 @@
-import React, { useCallback } from 'react';
-import { Image, View, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import React, { useCallback, useRef } from 'react';
+import { Image, View, ScrollView, TextInput} from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { Form } from '@unform/mobile';
+
+import { FormHandles } from '@unform/core';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -13,12 +14,15 @@ import {
   ForgotPassword,
   ForgotPasswordText,
   CreateAccountButton,
-  CreateAccountButtonText
+  CreateAccountButtonText,
+  FormSign
 } from './styles';
 
 import logoImg from '../../assets/logo.png';
 
 const SignIn: React.FC = () => {
+  const formRef = useRef<FormHandles>(null);
+  const passwordInputRef = useRef<TextInput>(null);
   const navigation = useNavigation();
 
   const handleSignIn = useCallback((data: object) => {
@@ -27,36 +31,54 @@ const SignIn: React.FC = () => {
 
   return (
     <>
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        enabled>
-        <ScrollView
+      <ScrollView
         keyboardShouldPersistTaps="handled"
-        >
-          <Container>
-            <Image source={logoImg} />
+      >
+        <Container>
+          <Image source={logoImg} />
 
-            <View>
-              <Title>Faça seu logon</Title>
-            </View>
+          <View>
+            <Title>Faça seu logon</Title>
+          </View>
 
-            <Form onSubmit={handleSignIn}>
-            <Input name="email" icon="mail" placeholder="E-mail" keyboardType="email-address" />
+          <FormSign style={{ width: '100%' }} ref={formRef} onSubmit={handleSignIn}>
 
-            <Input name="password" icon="lock" placeholder="Senha" />
+            <Input
+              name="email"
+              icon="mail"
+              placeholder="E-mail"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoCorrect={false}
+              returnKeyType="next"
+              onSubmitEditing={() => {
+                passwordInputRef.current?.focus();
+              }}
+            />
 
-            <Button onPress={() => { }}>Entrar</Button>
-            </Form>
+            <Input
+              ref={passwordInputRef}
+              name="password"
+              icon="lock"
+              placeholder="Senha"
+              secureTextEntry
+              returnKeyType="send"
+              onSubmitEditing={() => formRef.current?.submitForm()}
+            />
 
-            <ForgotPassword onPress={() => { }}>
-              <ForgotPasswordText>
-                Esqueci minha senha
-              </ForgotPasswordText>
-            </ForgotPassword>
-          </Container>
-        </ScrollView>
-      </KeyboardAvoidingView>
+            <Button onPress={() => {
+              formRef.current?.submitForm();
+            }}>Entrar</Button>
+
+            </FormSign>
+
+          <ForgotPassword onPress={() => { }}>
+            <ForgotPasswordText>
+              Esqueci minha senha
+            </ForgotPasswordText>
+          </ForgotPassword>
+        </Container>
+      </ScrollView>
 
       <CreateAccountButton onPress={() => navigation.navigate('SignUp')}>
         <Feather name="log-in" size={24} color="#ff9000" />
