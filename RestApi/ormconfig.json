@@ -1,23 +1,5 @@
 [
   {
-    "name": "default2",
-    "type": "mysql",
-    "host": "VMDEV01",
-    "port": 3306,
-    "username": "root",
-    "password": "joseaa",
-    "database": "bootcamp_rs",
-    "entities": [
-      "./src/models/*.ts"
-    ],
-    "migrations": [
-      "./src/database/migrations/*.ts"
-    ],
-    "cli": {
-      "migrationsDir": "./src/database/migrations"
-    }
-  },
-  {
     "name": "default",
     "type": "postgres",
     "host": "batyr.db.elephantsql.com",
@@ -26,13 +8,13 @@
     "username": "mlaxmdco",
     "password": "Fs7QoTf0jk0cLLzpzCq1_V5p0Vjc1bMk",
     "entities": [
-      "./src/models/*.ts"
+      "./src/modules/**/infra/typeorm/entities/*.ts"
     ],
     "migrations": [
-      "./src/database/migrations/*.ts"
+      "./src/shared/infra/typeorm/migrations/*.ts"
     ],
     "cli": {
-      "migrationsDir": "./src/database/migrations"
+      "migrationsDir": "./src/shared/infra/typeorm/migrations/"
     }
   }
 ]
