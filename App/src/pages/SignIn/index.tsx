@@ -58,12 +58,6 @@ const SignIn: React.FC = () => {
           email: data.email,
           password: data.password
       });
-
-      Alert.alert(
-        'Sucesso',
-        'Seu login foi realizado com sucesso.',
-      );
-
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationError(err);
@@ -93,7 +87,7 @@ const SignIn: React.FC = () => {
           <FormSign
             style={{ width: "100%" }}
             ref={formRef}
-            onSubmit={handleSignIn}
+            onSubmit={ handleSignIn }
           >
             <Input
               name="email"

@@ -4,9 +4,9 @@ import { Form } from '@unform/mobile';
 
 export const Container = styled.View`
   flex: 1;
+  justify-content: center;
   align-content: center;
   align-items: center;
-  justify-content: center;
   padding: 0 30px ${ Platform.OS === 'android' ? 100 : 40}px;
 `;
 
