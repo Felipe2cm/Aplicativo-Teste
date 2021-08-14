@@ -21,10 +21,10 @@
     "name": "default",
     "type": "postgres",
     "host": "batyr.db.elephantsql.com",
-    "port": 5432,    
+    "port": 5432,
     "database": "mlaxmdco",
     "username": "mlaxmdco",
-    "password": "Fs7QoTf0jk0cLLzpzCq1_V5p0Vjc1bMk",   
+    "password": "Fs7QoTf0jk0cLLzpzCq1_V5p0Vjc1bMk",
     "entities": [
       "./src/models/*.ts"
     ],
