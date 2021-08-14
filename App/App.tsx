@@ -7,6 +7,8 @@ import Main from './src/Main';
 import { useFonts, RobotoSlab_500Medium } from '@expo-google-fonts/roboto-slab';
 import AppLoading from 'expo-app-loading';
 
+import AppProvider from './src/hooks';
+
 export default function App() {
   let [fontsLoaded] = useFonts({
     RobotoSlab_500Medium,
@@ -16,9 +18,13 @@ export default function App() {
     return <AppLoading />;
   } else {
   return (
-    <NavigationContainer>
-      <Main/>
-    </NavigationContainer>
+    <>
+    <AppProvider>
+      <NavigationContainer>
+        <Main/>
+      </NavigationContainer>
+    </AppProvider>
+    </>
   )
   }
 }

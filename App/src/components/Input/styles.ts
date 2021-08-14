@@ -19,7 +19,7 @@ export const Container = styled.View<ContainerProps>`
   align-items: center;
 
   ${ (props) => props.isErrored  && css`
-    border: red solid 2px;
+    border: #c53030 solid 2px;
   `}
 
   ${ (props) => props.isFocused  && css`

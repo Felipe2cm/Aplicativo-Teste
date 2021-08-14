@@ -6,11 +6,16 @@ import {
   Platform,
   ScrollView,
   TextInput,
+  Alert,
  } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { FormHandles } from '@unform/core';
 
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native';
+import * as Yup from 'yup';
+import api from '../../services/api';
+
+import getValidationError from '../../utils/getValidationErros';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -25,15 +30,56 @@ import {
 
 import logoImg from '../../assets/logo.png';
 
+interface SingUpFormdata {
+  name: string;
+  email: string;
+  password: string;
+}
+
 const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const emailInputRef = useRef<TextInput>(null);
   const passwordInputRef = useRef<TextInput>(null);
   const navigation = useNavigation();
 
-  const handleSignUp = useCallback((data: object) => {
-    console.log(data);
-  }, []);
+  const handleSignUp = useCallback(async (data: SingUpFormdata) => {
+    formRef.current?.setErrors({});
+
+    const schema = Yup.object().shape({
+      name: Yup.string().trim().required('Nome obrigatório.'),
+      email: Yup.string().trim().required('Email obrigatório.').email('Digite um email válido.'),
+      password: Yup.string().min(6, 'No mínimo 6 dígitos.')
+    });
+
+    try {
+      await schema.validate(data, {
+        abortEarly: false,
+      });
+
+      await api.post('/users', data);
+
+      Alert.alert(
+        'Cadastro realizado com sucesso!',
+        'Você já pode fazer login na aplicação.'
+      );
+
+      navigation.goBack();
+
+    } catch (err) {
+      if (err instanceof Yup.ValidationError) {
+        const errors = getValidationError(err);
+
+        formRef.current?.setErrors(errors);
+
+        return;
+      }
+
+      Alert.alert(
+        "Erro ao realizar o cadastro.",
+        "Ocorreu um erro ao fazer o cadastro, cheque as credenciais."
+      );
+    }
+  }, [navigation]);
 
   return (
     <>

@@ -1,13 +1,15 @@
-import React, { useCallback, useRef } from 'react';
-import { Image, View, ScrollView, TextInput, Alert} from 'react-native';
-import { Feather } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import React, { useCallback, useRef } from "react";
+import { Image, View, ScrollView, TextInput, Alert } from "react-native";
+import { Feather } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
-import { FormHandles } from '@unform/core';
-import * as Yup from 'yup';
+import { FormHandles } from "@unform/core";
+import * as Yup from "yup";
 
-import Input from '../../components/Input';
-import Button from '../../components/Button';
+import { useAuth } from '../../hooks/auth';
+
+import Input from "../../components/Input";
+import Button from "../../components/Button";
 
 import {
   Container,
@@ -16,11 +18,11 @@ import {
   ForgotPasswordText,
   CreateAccountButton,
   CreateAccountButtonText,
-  FormSign
-} from './styles';
+  FormSign,
+} from "./styles";
 
-import logoImg from '../../assets/logo.png';
-import getValidationError from '../../utils/getValidationErros';
+import logoImg from "../../assets/logo.png";
+import getValidationError from "../../utils/getValidationErros";
 
 interface SignInFormData {
   email: string;
@@ -32,38 +34,55 @@ const SignIn: React.FC = () => {
   const passwordInputRef = useRef<TextInput>(null);
   const navigation = useNavigation();
 
+  const { signIn } = useAuth();
+
   const handleSignIn = useCallback(async (data: SignInFormData) => {
     formRef.current?.setErrors({});
 
     const schema = Yup.object().shape({
-      email: Yup.string().trim().required('Email obrigatório.').email('Digite um email válido.'),
-      password: Yup.string().required('Senha obrigatória.')
+      email: Yup.string()
+        .trim()
+        .required("Email obrigatório.")
+        .email("Digite um email válido."),
+      password: Yup.string().required("Senha obrigatória."),
     });
 
     try {
+      await schema.validate(data, {
+        abortEarly: false,
+      });
 
-        await schema.validate(data, {
-            abortEarly: false,
-        });
+      console.log(data);
 
-        // signIn({
-        //     email: data.email,
-        //     password: data.password
-        // });
+      await signIn({
+          email: data.email,
+          password: data.password
+      });
+
+      Alert.alert(
+        'Sucesso',
+        'Seu login foi realizado com sucesso.',
+      );
+
     } catch (err) {
-        const error: Yup.ValidationError = JSON.parse(JSON.stringify(err));
-
+      if (err instanceof Yup.ValidationError) {
         const errors = getValidationError(err);
 
         formRef.current?.setErrors(errors);
+
+        return;
+      }
+
+      Alert.alert(
+        "Erro na autenticação",
+        "Ocorreu um erro ao fazer o login, cheque as credenciais."
+      );
     }
-}, []);
+  }, []);
 
   return (
     <>
-      <ScrollView
-        keyboardShouldPersistTaps="handled"
-      >
+      <ScrollView keyboardShouldPersistTaps="handled">
         <Container>
           <Image source={logoImg} />
 
@@ -72,11 +91,10 @@ const SignIn: React.FC = () => {
           </View>
 
           <FormSign
-          style={{ width: '100%' }}
-          ref={formRef}
-          onSubmit={handleSignIn}
+            style={{ width: "100%" }}
+            ref={formRef}
+            onSubmit={handleSignIn}
           >
-
             <Input
               name="email"
               icon="mail"
@@ -101,26 +119,27 @@ const SignIn: React.FC = () => {
               textContentType="password"
             />
 
-            <Button onPress={() => {
-              formRef.current?.submitForm();
-            }}>Entrar</Button>
+            <Button
+              onPress={() => {
+                formRef.current?.submitForm();
+              }}
+            >
+              Entrar
+            </Button>
+          </FormSign>
 
-            </FormSign>
-
-          <ForgotPassword onPress={() => { }}>
-            <ForgotPasswordText>
-              Esqueci minha senha
-            </ForgotPasswordText>
+          <ForgotPassword onPress={() => {}}>
+            <ForgotPasswordText>Esqueci minha senha</ForgotPasswordText>
           </ForgotPassword>
         </Container>
       </ScrollView>
 
-      <CreateAccountButton onPress={() => navigation.navigate('SignUp')}>
+      <CreateAccountButton onPress={() => navigation.navigate("SignUp")}>
         <Feather name="log-in" size={24} color="#ff9000" />
         <CreateAccountButtonText>Criar uma conta</CreateAccountButtonText>
       </CreateAccountButton>
     </>
   );
-}
+};
 
-export default SignIn
+export default SignIn;

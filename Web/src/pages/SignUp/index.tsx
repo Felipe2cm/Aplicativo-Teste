@@ -29,7 +29,7 @@ const SignUp: React.FC = () => {
   const { addToast } = useToast();
   const history = useHistory();
 
-  const handleSubmit = useCallback(async (data: object) => {
+  const handleSubmit = useCallback(async (data: SignUpFormData) => {
     formRef.current?.setErrors({});
 
     const schema = Yup.object().shape({
