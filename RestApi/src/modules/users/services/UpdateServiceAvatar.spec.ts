@@ -16,7 +16,7 @@ describe('UpdateServiceAvatar', () => {
     const user = await fakeUsersRepository.create({
       name: 'Teste',
       email: 'teste@teste',
-      password: '123456'
+      password: '123456',
     });
 
     const updatedUser = await updateUserAvatarService.execute({
@@ -35,11 +35,12 @@ describe('UpdateServiceAvatar', () => {
       fakeDiskStorageRepository,
     );
 
-    expect(
+    await expect(
       updateUserAvatarService.execute({
-      user_id: '123123',
-      avatarFilename: 'image.jpg',
-    })).rejects.toBeInstanceOf(AppError);
+        user_id: '123123',
+        avatarFilename: 'image.jpg',
+      }),
+    ).rejects.toBeInstanceOf(AppError);
   });
 
   it('should be set a new avatar to user', async () => {
@@ -56,7 +57,7 @@ describe('UpdateServiceAvatar', () => {
     const user = await fakeUsersRepository.create({
       name: 'Teste',
       email: 'teste@teste',
-      password: '123456'
+      password: '123456',
     });
 
     await updateUserAvatarService.execute({
